@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0f09834ce044251b4028518eadc33b3, type: 3}
+  m_Name: IceWand
+  m_EditorClassIdentifier: 
+  WeaponTypeId: 0
+  Damage: 25
+  BulletSpeed: 32
+  Prefab: {fileID: 101511967591794269, guid: 5bbcc11dfb4a7244ab1f1ddda2fb2b8e, type: 3}
