@@ -1,16 +1,15 @@
 ﻿using GameCore.CommonLogic;
 using GameCore.Loading;
+using GameCore.Player;
 using Infrastructure.Services.Configs;
 using Infrastructure.Services.GameFactory;
+using Infrastructure.Services.PauseService;
 using Infrastructure.Services.SaveDataHandler;
 using Infrastructure.Services.UIFactory;
 using UI;
-using UnityEngine;
 
 namespace Infrastructure.StateMachine {
     public sealed class LoadLevelState : IPayloadedState<SceneName> {
-        const string InitialPointTag = "InitialPoint";
-        
         readonly GameStateMachine _stateMachine;
         readonly SceneLoader _sceneLoader;
         readonly LoadingScreen _loadingScreen;
@@ -20,7 +19,8 @@ namespace Infrastructure.StateMachine {
         readonly IUIFactory _uiFactory;
 
         public LoadLevelState(GameStateMachine stateMachine, SceneLoader sceneLoader, LoadingScreen loadingScreen,
-            ISaveDataHandler saveDataHandler, IGameFactory gameFactory, IConfigProvider configProvider, IUIFactory uiFactory) {
+            ISaveDataHandler saveDataHandler, IGameFactory gameFactory, IConfigProvider configProvider,
+            IUIFactory uiFactory) {
             _stateMachine = stateMachine;
             _sceneLoader = sceneLoader;
             _loadingScreen = loadingScreen;
@@ -43,7 +43,7 @@ namespace Infrastructure.StateMachine {
             InitUIRoot();
             InitLevel();
             InformSaveReaders();
-            
+
             _stateMachine.Enter<GameLoopState>();
         }
 
@@ -52,16 +52,20 @@ namespace Infrastructure.StateMachine {
         }
 
         void InitLevel() {
-            var player = _gameFactory.CreatePlayer(GameObject.FindWithTag(InitialPointTag));
-
             var sceneName = _sceneLoader.CurrentSceneName;
             var levelConfig = _configProvider.GetLevelConfig(sceneName);
+            
+            var player = _gameFactory.CreatePlayer(levelConfig.InitialPlayerPosition);
+            
             foreach (var enemySpawnerConfig in levelConfig.EnemySpawnerConfigs) {
-                _gameFactory.CreateSpawner(enemySpawnerConfig.Position);
+                _gameFactory.CreateSpawner(enemySpawnerConfig.Position, enemySpawnerConfig.SpawnTime);
             }
 
             var hud =  _gameFactory.CreateHUD();
             hud.GetComponentInChildren<ActorUI>().Init(player.GetComponent<IHealth>());
+
+            var levelObserver = new LevelObserver();
+            levelObserver.Init(_stateMachine, player.GetComponent<PlayerDeath>());
         }
         
         void InformSaveReaders() {

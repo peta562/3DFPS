@@ -27,7 +27,9 @@ namespace GameCore.Enemy {
             Vector3.Distance(Agent.transform.position, _destinationTransform.position) >= _stoppingDistance;
 
         public void OnPauseChanged(bool isPaused) {
-            Agent.isStopped = isPaused;
+            if ( Agent != null ) {
+                Agent.isStopped = isPaused;
+            }
         }
     }
 }

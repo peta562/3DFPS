@@ -9,18 +9,36 @@ using Random = UnityEngine.Random;
 namespace GameCore.CommonLogic.EnemySpawners {
     public sealed class SpawnPoint : MonoBehaviour, ISaveWriter, IPauseHandler {
         Func<EnemyTypeId, Transform, GameObject> _enemySpawnMethod;
-        
+
         int _killedEnemies;
         EnemyDeath _enemyDeath;
-        
-        bool _isPaused;
 
-        public void Init(Func<EnemyTypeId, Transform, GameObject> enemySpawnMethod) {
+        bool _isPaused;
+        
+        float _spawnTime;
+        bool _canSpawn;
+        float _timer;
+
+        public void Init(float spawnTime, Func<EnemyTypeId, Transform, GameObject> enemySpawnMethod) {
             _enemySpawnMethod = enemySpawnMethod;
 
-            Spawn();
+            _spawnTime = spawnTime;
+            _canSpawn = true;
         }
-        
+
+        void Update() {
+            if ( !_canSpawn || _isPaused ) {
+                return;
+            }
+
+            _timer -= Time.deltaTime;
+
+            if ( _timer <= 0f ) {
+                Spawn();
+                _timer += _spawnTime;
+            }
+        }
+
         public void SaveData(SaveData saveData) {
             saveData.PlayerSaveData.PlayerKillData.KilledEnemies += _killedEnemies;
         }
@@ -33,19 +51,19 @@ namespace GameCore.CommonLogic.EnemySpawners {
                 Debug.LogError("Enemy is null");
                 return;
             }
-            
+
             _enemyDeath = enemy.GetComponent<EnemyDeath>();
             _enemyDeath.OnDead += EnemyKill;
         }
 
-        EnemyTypeId GetRandomEnemyTypeId() => 
+        EnemyTypeId GetRandomEnemyTypeId() =>
             (EnemyTypeId) Random.Range(0, Enum.GetValues(typeof(EnemyTypeId)).Length);
 
         void EnemyKill() {
             if ( _enemyDeath != null ) {
                 _enemyDeath.OnDead -= EnemyKill;
             }
-            
+
             _killedEnemies += 1;
         }
 

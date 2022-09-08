@@ -11,6 +11,7 @@ using UnityEngine.SceneManagement;
 namespace Editor {
     [CustomEditor(typeof(LevelConfig))]
     public sealed class LevelConfigEditor : UnityEditor.Editor {
+        const string InitialPointTag = "InitialPoint";
         public override void OnInspectorGUI() {
             base.OnInspectorGUI();
 
@@ -26,6 +27,8 @@ namespace Editor {
                     Debug.LogError("Can't parse scene name to enum");
                 }
                 levelConfig.SceneName = sceneName;
+
+                levelConfig.InitialPlayerPosition = GameObject.FindWithTag(InitialPointTag).transform.position;
             }
             
             EditorUtility.SetDirty(target);

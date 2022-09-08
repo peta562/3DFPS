@@ -37,6 +37,8 @@ namespace Infrastructure.StateMachine {
             RegisterConfigProvider();
             RegisterAdService();
             
+            _services.RegisterSingle<IGameStateMachine>(_stateMachine);
+
             _services.RegisterSingle<IInputService>(GetInputService());
             _services.RegisterSingle<IPauseService>(new PauseService());
             _services.RegisterSingle<ISaveDataHandler>(new SaveDataHandler());

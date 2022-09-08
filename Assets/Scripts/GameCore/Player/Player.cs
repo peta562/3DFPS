@@ -33,7 +33,6 @@ namespace GameCore.Player {
         IInputService _inputService;
         IGameFactory _gameFactory;
         
-        bool _isDead;
         bool _isPaused;
         
         void Awake() {
@@ -42,17 +41,13 @@ namespace GameCore.Player {
         }
 
         void Update() {
-            if ( _isDead || _isPaused ) {
+            if ( _isPaused ) {
                 return;
             }
             
             PlayerMove.TryMove();
             PlayerAttack.TryAttack();
             PlayerCamera.UpdateCamera();
-        }
-
-        void OnDead() {
-            _isDead = true;
         }
 
         public void LoadSave(SaveData saveData) {
@@ -75,7 +70,7 @@ namespace GameCore.Player {
             PlayerMove.Init(_inputService, _playerSaveData.PlayerPositionData, MovementSpeed);
             PlayerCamera.Init(_inputService, Camera, MouseSensitivity);
             PlayerHealth.Init(_playerSaveData.PlayerHealthData);
-            PlayerDeath.Init(PlayerHealth, OnDead);
+            PlayerDeath.Init(PlayerHealth);
         }
 
         public void OnPauseChanged(bool isPaused) {

@@ -7,5 +7,6 @@ namespace Configs.LevelConfig {
     public class LevelConfig : ScriptableObject {
         public SceneName SceneName;
         public List<EnemySpawnerConfig> EnemySpawnerConfigs;
+        public Vector3 InitialPlayerPosition;
     }
 }

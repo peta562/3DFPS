@@ -4,12 +4,13 @@ using GameCore.Loading;
 using Infrastructure.Services;
 using Infrastructure.Services.Configs;
 using Infrastructure.Services.GameFactory;
+using Infrastructure.Services.PauseService;
 using Infrastructure.Services.SaveDataHandler;
 using Infrastructure.Services.SaveLoad;
 using Infrastructure.Services.UIFactory;
 
 namespace Infrastructure.StateMachine {
-    public sealed class GameStateMachine {
+    public sealed class GameStateMachine : IGameStateMachine {
         readonly Dictionary<Type, IExitableState> _states;
         IExitableState _activeState;
 
@@ -19,13 +20,15 @@ namespace Infrastructure.StateMachine {
                 [typeof(LoadProgressState)] = new LoadProgressState(this, 
                     services.Single<ISaveDataHandler>(),
                     services.Single<ISaveLoadService>()),
+                [typeof(MainMenuState)] = new MainMenuState(),
                 [typeof(LoadLevelState)] =
                     new LoadLevelState(this, sceneLoader, loadingScreen, 
                         services.Single<ISaveDataHandler>(),
                         services.Single<IGameFactory>(), 
                         services.Single<IConfigProvider>(),
                         services.Single<IUIFactory>()),
-                [typeof(GameLoopState)] = new GameLoopState(this),
+                [typeof(GameLoopState)] = new GameLoopState(this, 
+                    services.Single<IPauseService>()),
             };
         }
 

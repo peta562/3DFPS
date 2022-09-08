@@ -3,15 +3,15 @@ using UnityEngine;
 
 namespace GameCore.Player {
     public sealed class PlayerDeath : MonoBehaviour {
+        public event Action OnDead;
+        
         PlayerHealth _playerHealth;
 
-        Action _onDead;
         bool _isDead;
 
-        public void Init(PlayerHealth playerHealth, Action onDead) {
+        public void Init(PlayerHealth playerHealth) {
             _playerHealth = playerHealth;
-
-            _onDead = onDead;
+            
             _playerHealth.HealthChanged += HealthChanged;
         }
 
@@ -27,7 +27,7 @@ namespace GameCore.Player {
 
         void Die() {
             _isDead = true;
-            _onDead?.Invoke();
+            OnDead?.Invoke();
         }
     }
 }

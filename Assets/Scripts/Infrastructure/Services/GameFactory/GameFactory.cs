@@ -31,8 +31,8 @@ namespace Infrastructure.Services.GameFactory {
             _pauseService = pauseService;
         }
 
-        public GameObject CreatePlayer(GameObject at) {
-            _player = InstantiateRegistered(AssetPath.PlayerPath, at.transform.position);
+        public GameObject CreatePlayer(Vector3 position) {
+            _player = InstantiateRegistered(AssetPath.PlayerPath, position);
 
             return _player;
         }
@@ -85,10 +85,10 @@ namespace Infrastructure.Services.GameFactory {
             return lootPiece;
         }
 
-        public void CreateSpawner(Vector3 position) {
+        public void CreateSpawner(Vector3 position, float spawnTime) {
             var spawner = InstantiateRegistered(AssetPath.EnemySpawnPointPath, position).GetComponent<SpawnPoint>();
 
-            spawner.Init(CreateEnemy);
+            spawner.Init(spawnTime, CreateEnemy);
         }
 
         void Register(GameObject gameObject) {
