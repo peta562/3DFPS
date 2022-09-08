@@ -4,13 +4,11 @@ using Infrastructure.StateMachine;
 
 namespace GameCore.CommonLogic {
     public sealed class LevelObserver {
-        IGameStateMachine _gameStateMachine;
-        PlayerDeath _playerDeath;
+        readonly IGameStateMachine _gameStateMachine;
 
-        public void Init(IGameStateMachine gameStateMachine, PlayerDeath playerDeath) {
+        public LevelObserver(IGameStateMachine gameStateMachine, PlayerDeath playerDeath) {
             _gameStateMachine = gameStateMachine;
-            _playerDeath = playerDeath;
-            _playerDeath.OnDead += PlayerDead;
+            playerDeath.OnDead += PlayerDead;
         }
 
         void PlayerDead() {

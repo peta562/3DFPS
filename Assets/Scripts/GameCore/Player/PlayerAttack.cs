@@ -1,4 +1,5 @@
-﻿using Data;
+﻿using System;
+using Data;
 using GameCore.CommonLogic;
 using GameCore.Weapons;
 using Infrastructure.Services.GameFactory;
@@ -12,14 +13,14 @@ namespace GameCore.Player {
         Weapon _weapon;
         Transform _weaponSlot;
 
-        IGameFactory _gameFactory;
+        Func<WeaponTypeId, Transform, GameObject>  _createWeapon;
         IInputService _inputService;
         
         float _attackCooldownTime;
 
-        public void Init(IInputService inputService, IGameFactory gameFactory, PlayerWeaponData playerWeaponData, Transform weaponSlot, float attackCooldown) {
+        public void Init(IInputService inputService, Func<WeaponTypeId, Transform, GameObject> createWeapon, PlayerWeaponData playerWeaponData, Transform weaponSlot, float attackCooldown) {
             _inputService = inputService;
-            _gameFactory = gameFactory;
+            _createWeapon = createWeapon;
             _weaponTypeId = playerWeaponData.WeaponTypeId;
             _weaponSlot = weaponSlot;
             _attackCooldown = attackCooldown;
@@ -44,7 +45,7 @@ namespace GameCore.Player {
         }
 
         void CreateWeapon() {
-            _weapon = _gameFactory.CreateWeapon(_weaponTypeId, _weaponSlot).GetComponent<Weapon>();
+            _weapon = _createWeapon(_weaponTypeId, _weaponSlot).GetComponent<Weapon>();
         }
     }
 }

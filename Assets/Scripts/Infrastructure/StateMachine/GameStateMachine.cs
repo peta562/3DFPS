@@ -16,19 +16,25 @@ namespace Infrastructure.StateMachine {
 
         public GameStateMachine(SceneLoader sceneLoader, LoadingScreen loadingScreen, ServiceLocator services) {
             _states = new Dictionary<Type, IExitableState> {
-                [typeof(BootstrapState)] = new BootstrapState(this, sceneLoader, services),
-                [typeof(LoadProgressState)] = new LoadProgressState(this, 
-                    services.Single<ISaveDataHandler>(),
-                    services.Single<ISaveLoadService>()),
-                [typeof(MainMenuState)] = new MainMenuState(),
-                [typeof(LoadLevelState)] =
-                    new LoadLevelState(this, sceneLoader, loadingScreen, 
+                [typeof(BootstrapState)] =
+                    new BootstrapState(this, sceneLoader, services),
+                [typeof(LoadProgressState)] =
+                    new LoadProgressState(this,
                         services.Single<ISaveDataHandler>(),
-                        services.Single<IGameFactory>(), 
+                        services.Single<ISaveLoadService>()),
+                [typeof(MainMenuState)] =
+                    new MainMenuState(this, sceneLoader, loadingScreen,
+                        services.Single<IGameFactory>()),
+                [typeof(LoadLevelState)] =
+                    new LoadLevelState(this, sceneLoader, loadingScreen,
+                        services.Single<ISaveDataHandler>(),
+                        services.Single<IGameFactory>(),
                         services.Single<IConfigProvider>(),
                         services.Single<IUIFactory>()),
-                [typeof(GameLoopState)] = new GameLoopState(this, 
-                    services.Single<IPauseService>()),
+                [typeof(GameLoopState)] =
+                    new GameLoopState(this,
+                        services.Single<IPauseService>(),
+                        services.Single<ISaveLoadService>()),
             };
         }
 

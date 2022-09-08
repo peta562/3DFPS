@@ -13,6 +13,7 @@ namespace Infrastructure.Services.Configs {
         Dictionary<WeaponTypeId, WeaponConfig> _weaponConfigs;
         Dictionary<SceneName, LevelConfig> _levelConfigs;
         Dictionary<WindowType, WindowDescription> _windowDescriptions;
+        PlayerConfig _playerConfig;
 
         public void LoadConfigs() {
             _enemyConfigs = Resources.LoadAll<EnemyConfig>("Configs/Enemies")
@@ -24,6 +25,7 @@ namespace Infrastructure.Services.Configs {
             _windowDescriptions = Resources.Load<WindowConfig>("Configs/Windows/WindowConfig")
                 .WindowDescriptions
                 .ToDictionary(x => x.WindowType, x => x);
+            _playerConfig = Resources.Load<PlayerConfig>("Configs/PlayerConfig");
         }
 
         public EnemyConfig GetEnemyConfig(EnemyTypeId enemyTypeId) =>
@@ -37,5 +39,7 @@ namespace Infrastructure.Services.Configs {
 
         public WindowDescription GetWindowConfig(WindowType windowType) =>
             _windowDescriptions.TryGetValue(windowType, out var windowDescription) ? windowDescription : null;
+
+        public PlayerConfig GetPlayerConfig() => _playerConfig;
     }
 }

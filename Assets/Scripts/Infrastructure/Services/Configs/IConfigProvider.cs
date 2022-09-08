@@ -15,5 +15,6 @@ namespace Infrastructure.Services.Configs {
         LevelConfig GetLevelConfig(SceneName sceneName);
         
         WindowDescription GetWindowConfig(WindowType shopWindow);
+        PlayerConfig GetPlayerConfig();
     }
 }

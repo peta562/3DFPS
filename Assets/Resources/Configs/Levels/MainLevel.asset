@@ -15,4 +15,7 @@ MonoBehaviour:
   SceneName: 2
   EnemySpawnerConfigs:
   - Position: {x: -117.15, y: 5.78, z: 14.25}
+    SpawnTime: 10
   - Position: {x: 60.880005, y: 9.53, z: 124.33}
+    SpawnTime: 10
+  InitialPlayerPosition: {x: 39.376034, y: 0.33, z: -3.12}

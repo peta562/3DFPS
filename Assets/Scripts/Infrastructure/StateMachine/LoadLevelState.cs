@@ -3,7 +3,6 @@ using GameCore.Loading;
 using GameCore.Player;
 using Infrastructure.Services.Configs;
 using Infrastructure.Services.GameFactory;
-using Infrastructure.Services.PauseService;
 using Infrastructure.Services.SaveDataHandler;
 using Infrastructure.Services.UIFactory;
 using UI;
@@ -32,6 +31,7 @@ namespace Infrastructure.StateMachine {
 
         public void Enter(SceneName sceneName) {
             _loadingScreen.Show();
+            _gameFactory.Cleanup();
             _sceneLoader.Load(sceneName, OnLoaded);
         }
 
@@ -56,7 +56,7 @@ namespace Infrastructure.StateMachine {
             var levelConfig = _configProvider.GetLevelConfig(sceneName);
             
             var player = _gameFactory.CreatePlayer(levelConfig.InitialPlayerPosition);
-            
+
             foreach (var enemySpawnerConfig in levelConfig.EnemySpawnerConfigs) {
                 _gameFactory.CreateSpawner(enemySpawnerConfig.Position, enemySpawnerConfig.SpawnTime);
             }
@@ -64,8 +64,7 @@ namespace Infrastructure.StateMachine {
             var hud =  _gameFactory.CreateHUD();
             hud.GetComponentInChildren<ActorUI>().Init(player.GetComponent<IHealth>());
 
-            var levelObserver = new LevelObserver();
-            levelObserver.Init(_stateMachine, player.GetComponent<PlayerDeath>());
+            new LevelObserver(_stateMachine, player.GetComponent<PlayerDeath>());
         }
         
         void InformSaveReaders() {

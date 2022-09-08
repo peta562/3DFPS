@@ -1,5 +1,6 @@
 ﻿using GameCore.CommonLogic;
 using GameCore.Loot;
+using UI;
 using UnityEngine;
 
 namespace Infrastructure.Services.GameFactory {
@@ -10,5 +11,7 @@ namespace Infrastructure.Services.GameFactory {
         GameObject CreateWeapon(WeaponTypeId weaponTypeId, Transform parent);
         LootPiece CreateLoot(int lootMin, int lootMax);
         void CreateSpawner(Vector3 position, float spawnTime);
+        MainMenuUI CreateMainMenuUI();
+        void Cleanup();
     }
 }

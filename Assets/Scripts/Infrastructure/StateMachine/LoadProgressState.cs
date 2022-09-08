@@ -19,7 +19,7 @@ namespace Infrastructure.StateMachine {
         public void Enter() {
             LoadDataOrCreateNew();
 
-            _stateMachine.Enter<LoadLevelState, SceneName>(SceneName.Level);
+            _stateMachine.Enter<MainMenuState, SceneName>(SceneName.MainMenu);
         }
 
         public void Exit() {

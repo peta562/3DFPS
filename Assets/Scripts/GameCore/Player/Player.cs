@@ -1,5 +1,6 @@
-﻿using Data;
-using Infrastructure.Services;
+﻿using System;
+using Data;
+using GameCore.CommonLogic;
 using Infrastructure.Services.GameFactory;
 using Infrastructure.Services.Input;
 using Infrastructure.Services.PauseService;
@@ -11,16 +12,13 @@ namespace GameCore.Player {
         [Header("Settings")] 
         [SerializeField] PlayerAttack PlayerAttack;
         [SerializeField] Transform WeaponSlot;
-        [SerializeField] float AttackCooldown = 3f;
 
         [Header("Settings")] 
         [SerializeField] PlayerMove PlayerMove;
-        [SerializeField] float MovementSpeed = 15f;
 
         [Header("Camera Settings")] 
         [SerializeField] PlayerCamera PlayerCamera;
         [SerializeField] Camera Camera;
-        [SerializeField] float MouseSensitivity = 100f;
 
         [Header("Health Settings")] 
         [SerializeField] PlayerHealth PlayerHealth;
@@ -31,13 +29,21 @@ namespace GameCore.Player {
         PlayerSaveData _playerSaveData;
         
         IInputService _inputService;
-        IGameFactory _gameFactory;
+        Func<WeaponTypeId, Transform, GameObject> _createWeapon;
+        
+        float _attackCooldown;
+        float _movementSpeed;
+        float _mouseSensitivity;
         
         bool _isPaused;
-        
-        void Awake() {
-            _inputService = ServiceLocator.Services.Single<IInputService>();
-            _gameFactory = ServiceLocator.Services.Single<IGameFactory>();
+
+        public void Init(IInputService inputService, Func<WeaponTypeId, Transform, GameObject> createWeapon, float attackCooldown,
+            float movementSpeed, float mouseSensitivity) {
+            _inputService = inputService;
+            _createWeapon = createWeapon;
+            _attackCooldown = attackCooldown;
+            _movementSpeed = movementSpeed;
+            _mouseSensitivity = mouseSensitivity;
         }
 
         void Update() {
@@ -65,10 +71,10 @@ namespace GameCore.Player {
         }
 
         void InitBehaviours() {
-            PlayerAttack.Init(_inputService, _gameFactory, _playerSaveData.PlayerWeaponData, WeaponSlot,
-                AttackCooldown);
-            PlayerMove.Init(_inputService, _playerSaveData.PlayerPositionData, MovementSpeed);
-            PlayerCamera.Init(_inputService, Camera, MouseSensitivity);
+            PlayerAttack.Init(_inputService, _createWeapon, _playerSaveData.PlayerWeaponData, WeaponSlot,
+                _attackCooldown);
+            PlayerMove.Init(_inputService, _playerSaveData.PlayerPositionData, _movementSpeed);
+            PlayerCamera.Init(_inputService, Camera, _mouseSensitivity);
             PlayerHealth.Init(_playerSaveData.PlayerHealthData);
             PlayerDeath.Init(PlayerHealth);
         }

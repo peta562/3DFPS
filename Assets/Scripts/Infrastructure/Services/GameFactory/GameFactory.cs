@@ -2,9 +2,11 @@
 using GameCore.CommonLogic.EnemySpawners;
 using GameCore.Enemy;
 using GameCore.Loot;
+using GameCore.Player;
 using GameCore.Weapons;
 using Infrastructure.Services.AssetManagement;
 using Infrastructure.Services.Configs;
+using Infrastructure.Services.Input;
 using Infrastructure.Services.PauseService;
 using Infrastructure.Services.SaveDataHandler;
 using Infrastructure.Services.WindowService;
@@ -19,22 +21,30 @@ namespace Infrastructure.Services.GameFactory {
         readonly IConfigProvider _configProvider;
         readonly IWindowManager _windowManager;
         readonly IPauseService _pauseService;
+        readonly IInputService _inputService;
 
-        GameObject _player;
+        GameObject _playerObject;
 
         public GameFactory(ISaveDataHandler saveDataHandler, IAssetProvider assetProvider,
-            IConfigProvider configProvider, IWindowManager windowManager, IPauseService pauseService) {
+            IConfigProvider configProvider, IWindowManager windowManager, IPauseService pauseService, IInputService inputService) {
             _saveDataHandler = saveDataHandler;
             _assetProvider = assetProvider;
             _configProvider = configProvider;
             _windowManager = windowManager;
             _pauseService = pauseService;
+            _inputService = inputService;
         }
 
         public GameObject CreatePlayer(Vector3 position) {
-            _player = InstantiateRegistered(AssetPath.PlayerPath, position);
+            _playerObject = InstantiateRegistered(AssetPath.PlayerPath, position);
 
-            return _player;
+            var playerConfig = _configProvider.GetPlayerConfig();
+
+            var player = _playerObject.GetComponent<Player>();
+            player.Init(_inputService, CreateWeapon, playerConfig.AttackCooldown, playerConfig.MovementSpeed,
+                playerConfig.MouseSensitivity);
+            
+            return _playerObject;
         }
 
         public GameObject CreateHUD() {
@@ -48,6 +58,14 @@ namespace Infrastructure.Services.GameFactory {
             return hud;
         }
 
+        public MainMenuUI CreateMainMenuUI() =>
+            InstantiateRegistered(AssetPath.MainMenuUIPath).GetComponent<MainMenuUI>();
+
+        public void Cleanup() {
+            _saveDataHandler.SaveReaders.Clear();
+            _saveDataHandler.SaveWriters.Clear();
+        }
+
         public GameObject CreateEnemy(EnemyTypeId enemyTypeId, Transform parent) {
             var enemyConfig = _configProvider.GetEnemyConfig(enemyTypeId);
 
@@ -55,7 +73,7 @@ namespace Infrastructure.Services.GameFactory {
             Register(enemyObject);
 
             var enemy = enemyObject.GetComponent<Enemy>();
-            enemy.Init(_player.transform, enemyConfig.Speed, enemyConfig.StoppingDistance, enemyConfig.AttackCooldown,
+            enemy.Init(_playerObject.transform, enemyConfig.Speed, enemyConfig.StoppingDistance, enemyConfig.AttackCooldown,
                 enemyConfig.AttackDistance, enemyConfig.Damage, enemyConfig.Health, enemyConfig.MinLoot, enemyConfig.MaxLoot, CreateLoot);
 
             return enemyObject;

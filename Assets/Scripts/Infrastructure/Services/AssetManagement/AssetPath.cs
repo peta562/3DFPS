@@ -4,5 +4,6 @@
         public const string HudPath = "Hud/Hud";
         public const string LootPath = "Loot/Loot";
         public const string EnemySpawnPointPath = "Enemy/SpawnPoint";
+        public const string MainMenuUIPath = "MainMenu/MainMenuUI";
     }
 }

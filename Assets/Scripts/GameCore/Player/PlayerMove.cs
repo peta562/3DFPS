@@ -13,7 +13,9 @@ namespace GameCore.Player {
         public void Init(IInputService inputService, PlayerPositionData playerPositionData, float movementSpeed) {
             CharacterController = GetComponent<CharacterController>();
 
+            CharacterController.enabled = false; 
             transform.position = playerPositionData.Position;
+            CharacterController.enabled = true;
                 
             _inputService = inputService;
             _movementSpeed = movementSpeed;

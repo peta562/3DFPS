@@ -61,7 +61,8 @@ namespace Infrastructure.StateMachine {
                 _services.Single<IAssetProvider>(),
                 _services.Single<IConfigProvider>(),
                 _services.Single<IWindowManager>(),
-                _services.Single<IPauseService>())
+                _services.Single<IPauseService>(),
+                _services.Single<IInputService>())
             );
         }
 
