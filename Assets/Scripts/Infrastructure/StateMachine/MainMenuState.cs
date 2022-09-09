@@ -1,4 +1,5 @@
-﻿using GameCore.CommonLogic;
+﻿using System.Threading.Tasks;
+using GameCore.CommonLogic;
 using GameCore.Loading;
 using Infrastructure.Services.GameFactory;
 
@@ -24,14 +25,14 @@ namespace Infrastructure.StateMachine {
 
         public void Exit() {
         }
-        
-        void OnLoaded() {
+
+        async void OnLoaded() {
             _loadingScreen.Hide();
-            InitUI();
+            await InitUI();
         }
 
-        void InitUI() {
-            var mainMenuUI = _gameFactory.CreateMainMenuUI();
+        async Task InitUI() {
+            var mainMenuUI = await _gameFactory.CreateMainMenuUI();
 
             new MainMenuObserver(_stateMachine, mainMenuUI);
         }

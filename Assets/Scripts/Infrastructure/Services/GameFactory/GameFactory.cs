@@ -42,8 +42,8 @@ namespace Infrastructure.Services.GameFactory {
             await _assetProvider.Load<GameObject>(AssetAddress.EnemySpawnPoint);
         }
 
-        public GameObject CreatePlayer(Vector3 position) {
-            _playerObject = InstantiateRegistered(AssetAddress.PlayerPath, position);
+        public async Task<GameObject> CreatePlayer(Vector3 position) {
+            _playerObject = await InstantiateRegisteredAsync(AssetAddress.Player, position);
 
             var playerConfig = _configProvider.GetPlayerConfig();
 
@@ -54,8 +54,8 @@ namespace Infrastructure.Services.GameFactory {
             return _playerObject;
         }
 
-        public GameObject CreateHUD() {
-            var hud = InstantiateRegistered(AssetAddress.HudPath);
+        public async Task<GameObject> CreateHUD() {
+            var hud = await InstantiateRegisteredAsync(AssetAddress.Hud);
 
             hud.GetComponentInChildren<LootUI>().Init(_saveDataHandler.SaveData.PlayerSaveData.PlayerLootData);
 
@@ -66,8 +66,10 @@ namespace Infrastructure.Services.GameFactory {
             return hud;
         }
 
-        public MainMenuUI CreateMainMenuUI() =>
-            InstantiateRegistered(AssetAddress.MainMenuUIPath).GetComponent<MainMenuUI>();
+        public async Task<MainMenuUI> CreateMainMenuUI() {
+            var mainMenuObject = await InstantiateRegisteredAsync(AssetAddress.MainMenuUI);
+            return mainMenuObject.GetComponent<MainMenuUI>();
+        }
 
         public void Cleanup() {
             _saveDataHandler.SaveReaders.Clear();
@@ -132,8 +134,15 @@ namespace Infrastructure.Services.GameFactory {
             RegisterPauseHandlers(gameObject);
         }
 
-        GameObject InstantiateRegistered(string prefabPath, Vector3 at) {
-            var gameObject = _assetProvider.Instantiate(prefabPath, at);
+        async Task<GameObject> InstantiateRegisteredAsync(string address, Vector3 at) {
+            var gameObject = await _assetProvider.Instantiate(address, at);
+
+            Register(gameObject);
+            return gameObject;
+        }
+
+        async Task<GameObject> InstantiateRegisteredAsync(string address) {
+            var gameObject = await _assetProvider.Instantiate(address);
 
             Register(gameObject);
             return gameObject;
@@ -141,14 +150,6 @@ namespace Infrastructure.Services.GameFactory {
 
         GameObject InstantiateRegistered(GameObject prefab, Vector3 at) {
             var gameObject = Object.Instantiate(prefab, at, Quaternion.identity);
-
-            Register(gameObject);
-            return gameObject;
-        }
-
-
-        GameObject InstantiateRegistered(string prefabPath) {
-            var gameObject = _assetProvider.Instantiate(path: prefabPath);
 
             Register(gameObject);
             return gameObject;

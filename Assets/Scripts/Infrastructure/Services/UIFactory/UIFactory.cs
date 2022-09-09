@@ -1,4 +1,5 @@
-﻿using Infrastructure.Services.Ads;
+﻿using System.Threading.Tasks;
+using Infrastructure.Services.Ads;
 using Infrastructure.Services.AssetManagement;
 using Infrastructure.Services.Configs;
 using Infrastructure.Services.PauseService;
@@ -35,8 +36,9 @@ namespace Infrastructure.Services.UIFactory {
             }
         }
 
-        public void CreateUIRoot() {
-            _uiRoot = _assetProvider.Instantiate("UI/UICanvas").transform;
+        public async Task CreateUIRoot() {
+            var uiRootObject = await _assetProvider.Instantiate(AssetAddress.UICanvas);
+            _uiRoot = uiRootObject.transform;
         }
     }
 }

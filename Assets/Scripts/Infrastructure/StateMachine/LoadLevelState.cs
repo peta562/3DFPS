@@ -42,37 +42,37 @@ namespace Infrastructure.StateMachine {
         }
 
         async void OnLoaded() {
-            InitUIRoot();
+            await InitUIRoot();
             await InitLevel();
             InformSaveReaders();
 
             _stateMachine.Enter<GameLoopState>();
         }
 
-        void InitUIRoot() {
-            _uiFactory.CreateUIRoot();
+        async Task InitUIRoot() {
+            await _uiFactory.CreateUIRoot();
         }
 
         async Task InitLevel() {
             var sceneName = _sceneLoader.CurrentSceneName;
             var levelConfig = _configProvider.GetLevelConfig(sceneName);
-            
-            var player = _gameFactory.CreatePlayer(levelConfig.InitialPlayerPosition);
+
+            var player = await _gameFactory.CreatePlayer(levelConfig.InitialPlayerPosition);
 
             foreach (var enemySpawnerConfig in levelConfig.EnemySpawnerConfigs) {
                 await _gameFactory.CreateSpawner(enemySpawnerConfig.Position, enemySpawnerConfig.SpawnTime);
             }
 
-            var hud =  _gameFactory.CreateHUD();
+            var hud = await _gameFactory.CreateHUD();
             hud.GetComponentInChildren<ActorUI>().Init(player.GetComponent<IHealth>());
 
             new LevelObserver(_stateMachine, player.GetComponent<PlayerDeath>());
         }
-        
+
         void InformSaveReaders() {
             foreach (var saveReader in _saveDataHandler.SaveReaders) {
                 saveReader.LoadSave(_saveDataHandler.SaveData);
-            }   
+            }
         }
     }
 }

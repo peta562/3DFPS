@@ -33,6 +33,22 @@ MonoBehaviour:
     m_Address: SpawnPoint
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: ad1c41568e098ba4fa2823105fc6fa03
+    m_Address: Player
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: c66085d186d1b714f9cf95fcbcbeb3cd
+    m_Address: Hud
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 80861a2ffa5998446b021f11066e73b6
+    m_Address: MainMenuUI
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: fe18d22671dcac74ebf0325ac14bc03f
+    m_Address: UICanvas
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: f6db5e67e0013fd48a1922d540ab3e1b, type: 2}
   m_SchemaSet:
