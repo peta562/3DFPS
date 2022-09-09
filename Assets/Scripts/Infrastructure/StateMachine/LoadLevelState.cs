@@ -1,4 +1,5 @@
-﻿using GameCore.CommonLogic;
+﻿using System.Threading.Tasks;
+using GameCore.CommonLogic;
 using GameCore.Loading;
 using GameCore.Player;
 using Infrastructure.Services.Configs;
@@ -32,6 +33,7 @@ namespace Infrastructure.StateMachine {
         public void Enter(SceneName sceneName) {
             _loadingScreen.Show();
             _gameFactory.Cleanup();
+            _gameFactory.WarmUp();
             _sceneLoader.Load(sceneName, OnLoaded);
         }
 
@@ -39,9 +41,9 @@ namespace Infrastructure.StateMachine {
             _loadingScreen.Hide();
         }
 
-        void OnLoaded() {
+        async void OnLoaded() {
             InitUIRoot();
-            InitLevel();
+            await InitLevel();
             InformSaveReaders();
 
             _stateMachine.Enter<GameLoopState>();
@@ -51,14 +53,14 @@ namespace Infrastructure.StateMachine {
             _uiFactory.CreateUIRoot();
         }
 
-        void InitLevel() {
+        async Task InitLevel() {
             var sceneName = _sceneLoader.CurrentSceneName;
             var levelConfig = _configProvider.GetLevelConfig(sceneName);
             
             var player = _gameFactory.CreatePlayer(levelConfig.InitialPlayerPosition);
 
             foreach (var enemySpawnerConfig in levelConfig.EnemySpawnerConfigs) {
-                _gameFactory.CreateSpawner(enemySpawnerConfig.Position, enemySpawnerConfig.SpawnTime);
+                await _gameFactory.CreateSpawner(enemySpawnerConfig.Position, enemySpawnerConfig.SpawnTime);
             }
 
             var hud =  _gameFactory.CreateHUD();

@@ -1,18 +1,17 @@
 ﻿using System;
-using Data;
+using System.Threading.Tasks;
 using GameCore.Enemy;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace GameCore.Loot {
     public sealed class LootSpawner : MonoBehaviour {
         [SerializeField] EnemyDeath EnemyDeath;
 
-        Func<int, int, LootPiece> _lootSpawnMethod;
+        Func<int, int, Task<LootPiece>> _lootSpawnMethod;
         int _lootMax;
         int _lootMin;
 
-        public void Init(int minLoot, int maxLoot, Func<int, int, LootPiece> lootSpawnMethod) {
+        public void Init(int minLoot, int maxLoot, Func<int, int, Task<LootPiece>> lootSpawnMethod) {
             _lootSpawnMethod = lootSpawnMethod;
             _lootMin = minLoot;
             _lootMax = maxLoot;
@@ -26,8 +25,8 @@ namespace GameCore.Loot {
             EnemyDeath.OnDead -= SpawnLoot;
         }
 
-        void SpawnLoot() {
-            var lootPiece = _lootSpawnMethod.Invoke(_lootMin, _lootMax);
+        async void SpawnLoot() {
+            var lootPiece = await _lootSpawnMethod.Invoke(_lootMin, _lootMax);
             lootPiece.transform.position = transform.position;
         }
     }

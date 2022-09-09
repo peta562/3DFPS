@@ -29,6 +29,9 @@ namespace GameCore.Player {
 
         public void Init(PlayerHealthData playerHealthData) {
             _playerHealthData = playerHealthData;
+            if ( _playerHealthData.CurrentHP <= 0f ) {
+                _playerHealthData.ResetHP();
+            }
             HealthChanged?.Invoke();
         }
 

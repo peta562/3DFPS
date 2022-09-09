@@ -9,35 +9,35 @@ using UnityEngine;
 
 namespace GameCore.Player {
     public sealed class Player : MonoBehaviour, ISaveReader, ISaveWriter, IPauseHandler {
-        [Header("Settings")] 
-        [SerializeField] PlayerAttack PlayerAttack;
+        [Header("Settings")] [SerializeField] PlayerAttack PlayerAttack;
         [SerializeField] Transform WeaponSlot;
 
-        [Header("Settings")] 
-        [SerializeField] PlayerMove PlayerMove;
+        [Header("Settings")] [SerializeField] PlayerMove PlayerMove;
 
-        [Header("Camera Settings")] 
-        [SerializeField] PlayerCamera PlayerCamera;
+        [Header("Camera Settings")] [SerializeField]
+        PlayerCamera PlayerCamera;
+
         [SerializeField] Camera Camera;
 
-        [Header("Health Settings")] 
-        [SerializeField] PlayerHealth PlayerHealth;
+        [Header("Health Settings")] [SerializeField]
+        PlayerHealth PlayerHealth;
 
-        [Header("Death")] 
-        [SerializeField] PlayerDeath PlayerDeath;
-        
+        [Header("Death")] [SerializeField] PlayerDeath PlayerDeath;
+
         PlayerSaveData _playerSaveData;
-        
+
         IInputService _inputService;
         Func<WeaponTypeId, Transform, GameObject> _createWeapon;
-        
+
         float _attackCooldown;
         float _movementSpeed;
         float _mouseSensitivity;
-        
-        bool _isPaused;
 
-        public void Init(IInputService inputService, Func<WeaponTypeId, Transform, GameObject> createWeapon, float attackCooldown,
+        bool _isPaused;
+        bool _behavioursInited;
+
+        public void Init(IInputService inputService, Func<WeaponTypeId, Transform, GameObject> createWeapon,
+            float attackCooldown,
             float movementSpeed, float mouseSensitivity) {
             _inputService = inputService;
             _createWeapon = createWeapon;
@@ -47,10 +47,10 @@ namespace GameCore.Player {
         }
 
         void Update() {
-            if ( _isPaused ) {
+            if ( _isPaused || !_behavioursInited ) {
                 return;
             }
-            
+
             PlayerMove.TryMove();
             PlayerAttack.TryAttack();
             PlayerCamera.UpdateCamera();
@@ -66,7 +66,7 @@ namespace GameCore.Player {
             PlayerAttack.SaveData(_playerSaveData);
             PlayerMove.SaveData(_playerSaveData);
             PlayerHealth.SaveData(_playerSaveData);
-            
+
             saveData.PlayerSaveData = _playerSaveData;
         }
 
@@ -77,6 +77,8 @@ namespace GameCore.Player {
             PlayerCamera.Init(_inputService, Camera, _mouseSensitivity);
             PlayerHealth.Init(_playerSaveData.PlayerHealthData);
             PlayerDeath.Init(PlayerHealth);
+
+            _behavioursInited = true;
         }
 
         public void OnPauseChanged(bool isPaused) {

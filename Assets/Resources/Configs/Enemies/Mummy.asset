@@ -21,4 +21,8 @@ MonoBehaviour:
   AttackCooldown: 3
   MaxLoot: 5
   MinLoot: 10
-  Prefab: {fileID: 5611364916264692780, guid: 630490ed62453c440b095698ae8c4900, type: 3}
+  PrefabReference:
+    m_AssetGUID: 630490ed62453c440b095698ae8c4900
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0

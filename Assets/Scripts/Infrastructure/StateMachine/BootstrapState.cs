@@ -36,6 +36,7 @@ namespace Infrastructure.StateMachine {
         void RegisterServices() {
             RegisterConfigProvider();
             RegisterAdService();
+            RegisterAssetProvider();
             
             _services.RegisterSingle<IGameStateMachine>(_stateMachine);
 
@@ -45,7 +46,6 @@ namespace Infrastructure.StateMachine {
             _services.RegisterSingle<ISaveLoadService>(new JsonSaveLoadService(
                 _services.Single<ISaveDataHandler>())
             );
-            _services.RegisterSingle<IAssetProvider>(new AssetProvider());
             _services.RegisterSingle<IUIFactory>(new UIFactory(
                 _services.Single<IAssetProvider>(),
                 _services.Single<IConfigProvider>(),
@@ -80,6 +80,12 @@ namespace Infrastructure.StateMachine {
             var configProvider = new ConfigProvider();
             configProvider.LoadConfigs();
             _services.RegisterSingle<IConfigProvider>(configProvider);
+        }
+
+        void RegisterAssetProvider() {
+            var assetProvider = new AssetProvider();
+            assetProvider.Init();
+            _services.RegisterSingle<IAssetProvider>(assetProvider);
         }
 
         void RegisterAdService() {

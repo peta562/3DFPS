@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Data;
 using GameCore.Enemy;
 using Infrastructure.Services.PauseService;
@@ -8,7 +9,7 @@ using Random = UnityEngine.Random;
 
 namespace GameCore.CommonLogic.EnemySpawners {
     public sealed class SpawnPoint : MonoBehaviour, ISaveWriter, IPauseHandler {
-        Func<EnemyTypeId, Transform, GameObject> _enemySpawnMethod;
+        Func<EnemyTypeId, Transform, Task<GameObject>> _enemySpawnMethod;
 
         int _killedEnemies;
         EnemyDeath _enemyDeath;
@@ -19,7 +20,7 @@ namespace GameCore.CommonLogic.EnemySpawners {
         bool _canSpawn;
         float _timer;
 
-        public void Init(float spawnTime, Func<EnemyTypeId, Transform, GameObject> enemySpawnMethod) {
+        public void Init(float spawnTime, Func<EnemyTypeId, Transform, Task<GameObject>> enemySpawnMethod) {
             _enemySpawnMethod = enemySpawnMethod;
 
             _spawnTime = spawnTime;
@@ -43,9 +44,9 @@ namespace GameCore.CommonLogic.EnemySpawners {
             saveData.PlayerSaveData.PlayerKillData.KilledEnemies += _killedEnemies;
         }
 
-        void Spawn() {
+        async void Spawn() {
             var randomEnemyTypeId = GetRandomEnemyTypeId();
-            var enemy = _enemySpawnMethod?.Invoke(randomEnemyTypeId, transform);
+            var enemy = await _enemySpawnMethod.Invoke(randomEnemyTypeId, transform);
 
             if ( enemy == null ) {
                 Debug.LogError("Enemy is null");

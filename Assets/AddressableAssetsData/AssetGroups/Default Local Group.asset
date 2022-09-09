@@ -16,7 +16,23 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: 3da0035bad966ff4e8d509388acfefa6
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 79704da6e28823a4fbdaddc545db9b85
+    m_Address: BatEnemy
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 630490ed62453c440b095698ae8c4900
+    m_Address: MummyEnemy
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 5691a55b91b94464dbbe597b6aab976a
+    m_Address: Loot
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 45fc578eeaa750c40aa79c01b166afef
+    m_Address: SpawnPoint
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: f6db5e67e0013fd48a1922d540ab3e1b, type: 2}
   m_SchemaSet:

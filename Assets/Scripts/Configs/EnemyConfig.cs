@@ -1,5 +1,6 @@
 ﻿using GameCore.CommonLogic;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 namespace Configs {
     [CreateAssetMenu(fileName = "EnemyConfig", menuName = "Configs/EnemyConfig", order = 1)]
@@ -25,6 +26,6 @@ namespace Configs {
         public int MaxLoot;
         public int MinLoot;
 
-        public GameObject Prefab;
+        public AssetReferenceGameObject PrefabReference;
     }
 }

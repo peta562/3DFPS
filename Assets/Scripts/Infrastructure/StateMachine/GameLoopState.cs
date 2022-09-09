@@ -8,11 +8,13 @@ namespace Infrastructure.StateMachine {
         readonly IPauseService _pauseService;
         readonly ISaveLoadService _saveLoadService;
 
-        public GameLoopState(GameStateMachine stateMachine, IPauseService pauseService, ISaveLoadService saveLoadService) {
+        public GameLoopState(GameStateMachine stateMachine, IPauseService pauseService,
+            ISaveLoadService saveLoadService) {
             _stateMachine = stateMachine;
             _pauseService = pauseService;
             _saveLoadService = saveLoadService;
         }
+
         public void Enter() {
             _pauseService.SetPause(false);
             Debug.Log("Enter game loop");
