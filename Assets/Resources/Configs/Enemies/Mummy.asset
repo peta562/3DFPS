@@ -17,7 +17,7 @@ MonoBehaviour:
   StoppingDistance: 3
   Health: 50
   Damage: 10
-  AttackDistance: 3
+  AttackDistance: 3.5
   AttackCooldown: 3
   MaxLoot: 5
   MinLoot: 10
