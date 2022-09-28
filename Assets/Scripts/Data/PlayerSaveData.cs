@@ -8,6 +8,7 @@ namespace Data {
         public PlayerKillData PlayerKillData;
         public PlayerWeaponData PlayerWeaponData;
         public PlayerLootData PlayerLootData;
+        public PurchaseData PurchaseData;
         
         public PlayerSaveData() {
             PlayerPositionData = new PlayerPositionData();
@@ -15,6 +16,7 @@ namespace Data {
             PlayerKillData = new PlayerKillData();
             PlayerWeaponData = new PlayerWeaponData();
             PlayerLootData = new PlayerLootData();
+            PurchaseData = new PurchaseData();
         }
     }
 }

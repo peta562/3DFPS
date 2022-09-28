@@ -3,6 +3,7 @@ using Infrastructure.Services.Ads;
 using Infrastructure.Services.AssetManagement;
 using Infrastructure.Services.Configs;
 using Infrastructure.Services.GameFactory;
+using Infrastructure.Services.IAP;
 using Infrastructure.Services.Input;
 using Infrastructure.Services.PauseService;
 using Infrastructure.Services.SaveDataHandler;
@@ -37,25 +38,32 @@ namespace Infrastructure.StateMachine {
             RegisterConfigProvider();
             RegisterAdService();
             RegisterAssetProvider();
-            
+
             _services.RegisterSingle<IGameStateMachine>(_stateMachine);
 
             _services.RegisterSingle<IInputService>(GetInputService());
             _services.RegisterSingle<IPauseService>(new PauseService());
             _services.RegisterSingle<ISaveDataHandler>(new SaveDataHandler());
+            
             _services.RegisterSingle<ISaveLoadService>(new JsonSaveLoadService(
                 _services.Single<ISaveDataHandler>())
             );
+            
+            RegisterIAPService(new IAPProvider(), _services.Single<ISaveDataHandler>());
+            
             _services.RegisterSingle<IUIFactory>(new UIFactory(
                 _services.Single<IAssetProvider>(),
                 _services.Single<IConfigProvider>(),
                 _services.Single<ISaveDataHandler>(),
                 _services.Single<IPauseService>(),
-                _services.Single<IAdService>())
+                _services.Single<IAdService>(),
+                _services.Single<IIAPService>())
             );
+            
             _services.RegisterSingle<IWindowManager>(new WindowManager(
                 _services.Single<IUIFactory>())
             );
+            
             _services.RegisterSingle<IGameFactory>(new GameFactory(
                 _services.Single<ISaveDataHandler>(),
                 _services.Single<IAssetProvider>(),
@@ -86,6 +94,12 @@ namespace Infrastructure.StateMachine {
             var assetProvider = new AssetProvider();
             assetProvider.Init();
             _services.RegisterSingle<IAssetProvider>(assetProvider);
+        }
+        
+        void RegisterIAPService(IAPProvider iapProvider, ISaveDataHandler saveDataHandler) {
+            var iapService = new IAPService(iapProvider, saveDataHandler);
+            iapService.Init();
+            _services.RegisterSingle<IIAPService>(iapService);
         }
 
         void RegisterAdService() {

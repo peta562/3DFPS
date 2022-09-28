@@ -3,7 +3,7 @@ using Infrastructure.Services.SaveDataHandler;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace UI.Windows {
+namespace UI.Windows.Shop {
     public sealed class RewardedAdItem : MonoBehaviour {
         [SerializeField] Button ShowAdButton;
 

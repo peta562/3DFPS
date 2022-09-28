@@ -49,6 +49,34 @@ MonoBehaviour:
     m_Address: UICanvas
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: 604e24c076de5bc479418fef9e2c503e
+    m_Address: ShopItem
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 4a39cb4b272639541b7bd5ac0649acf7
+    m_Address: iap_icon1
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: fe025e83f69d0b54f8a4fe3c7c128fd7
+    m_Address: iap_icon2
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: e7d29a79bc7fae248887c8a08a160303
+    m_Address: iap_icon3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: b97c91e8b348f3f4ebdc11f5c82182cd
+    m_Address: iap_icon4
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 5fd50594014b70e48bd6993443d46b32
+    m_Address: iap_icon5
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 5d9ba4e7d0964044ea54abe409d81dfd
+    m_Address: iap_icon6
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: f6db5e67e0013fd48a1922d540ab3e1b, type: 2}
   m_SchemaSet:
